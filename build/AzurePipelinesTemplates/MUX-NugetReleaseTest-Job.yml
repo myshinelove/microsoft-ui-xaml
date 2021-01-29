@@ -67,9 +67,9 @@ jobs:
       $candidateNupkgs = Get-ChildItem $pathToNupkg\Microsoft.UI.Xaml.*.nupkg
       $nupkgFile = $candidateNupkgs[0].FullName;
       Copy-Item $nupkgFile $env:localPackagesPath
-
+      
       $newVersion = $candidateNupkgs[0].Name.Replace("Microsoft.UI.Xaml.", "").Replace(".nupkg", "")
-
+      
       Write-Host "New version: $newVersion"
       .\test\MUXControlsReleaseTest\updateUsedNugetPackageVersion.ps1 $newVersion
     displayName: Rewrite project files to use new version
