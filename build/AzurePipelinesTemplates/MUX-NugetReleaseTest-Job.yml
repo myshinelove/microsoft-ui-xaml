@@ -83,6 +83,7 @@ jobs:
       {
         $pathToNupkg = "($env:artifactDownloadPath)\drop\FrameworkPackage"
       }
+      Write-Host "pathToNupkg: $pathToNupkg"
 
       $candidateNupkgs = Get-ChildItem $pathToNupkg\Microsoft.UI.Xaml.*.nupkg
       $nupkgFile = $candidateNupkgs[0].FullName;
