@@ -8,3 +8,22 @@ steps:
       filePath: build\Install-WindowsSdkISO.ps1
       arguments: ${{ parameters.sdkVersion }}
     displayName: 'Install Windows SDK (${{ parameters.sdkVersion }})'
+
+  - task: CmdLine@1
+    condition: ne(variables['System.CollectionUri'],'https://dev.azure.com/ms/')
+    displayName: 'Install Insider Windows SDK Parts'
+    inputs:
+      filename: '$(Build.SourcesDirectory)\tools\InternalWindowsSDKNuget\InstallNupkgParts.cmd'
+
+  - task: CmdLine@1
+    condition: ne(variables['System.CollectionUri'],'https://dev.azure.com/ms/')
+    displayName: 'Merge Insider Windows SDK Parts'
+    inputs:
+      filename: '$(Build.SourcesDirectory)\tools\InternalWindowsSDKNuget\MergeNupkgParts.cmd'
+
+  - task: CmdLine@1
+    condition: ne(variables['System.CollectionUri'],'https://dev.azure.com/ms/')
+    displayName: 'Set up Insider Windows SDK'
+    inputs:
+      filename: '$(Build.SourcesDirectory)\tools\InternalWindowsSDKNuget\SetUpInternalWindowsSDK.cmd'
+
