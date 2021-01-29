@@ -71,7 +71,7 @@ jobs:
 - template: AzurePipelinesTemplates\MUX-NugetReleaseTest-Job.yml
   parameters:
     # dependsOn: CreateNugetPackage
-    useFrameworkPkg: false
+    useFrameworkPkg: true
     runTests: 'false'
     matrix:
       Debug_x64:
