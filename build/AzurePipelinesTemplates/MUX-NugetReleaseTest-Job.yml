@@ -62,7 +62,7 @@ jobs:
     inputs: 
       artifactName: drop
       downloadPath: $(artifactDownloadPath)
-      itemPattern: '\**\*.nupkg'
+      itemPattern: '**\*.nupkg'
   - task: DownloadBuildArtifacts@0 
     condition:
       and(succeeded(),ne(variables['useBuildOutputFromBuildId'],''))
@@ -74,7 +74,7 @@ jobs:
       buildId: $(useBuildOutputFromBuildId)
       artifactName: drop
       downloadPath: $(artifactDownloadPath)
-      itemPattern: '\**\*.nupkg'
+      itemPattern: '**\*.nupkg'
 
   # Rewrite the project files to use the new version
   - powershell: |
