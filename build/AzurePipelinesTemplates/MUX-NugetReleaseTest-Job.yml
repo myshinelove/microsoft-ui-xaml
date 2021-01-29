@@ -56,23 +56,23 @@ jobs:
       downloadPath: $(artifactDownloadPath)
       itemPattern: '\**\*.nupkg'
 
-    # Rewrite the project files to use the new version
-    - powershell: |
-        $pathToNupkg = $env:artifactDownloadPath\drop
-        if($env:useFrameworkPkg -eq "true")
-        {
-          $pathToNupkg = $env:artifactDownloadPath\drop\FrameworkPackage
-        }
-        
-        $candidateNupkgs = Get-ChildItem $pathToNupkg\Microsoft.UI.Xaml.*.nupkg
-        $nupkgFile = $candidateNupkgs[0].FullName;
-        Copy-Item $nupkgFile $env:localPackagesPath
+  # Rewrite the project files to use the new version
+  - powershell: |
+      $pathToNupkg = $env:artifactDownloadPath\drop
+      if($env:useFrameworkPkg -eq "true")
+      {
+        $pathToNupkg = $env:artifactDownloadPath\drop\FrameworkPackage
+      }
+      
+      $candidateNupkgs = Get-ChildItem $pathToNupkg\Microsoft.UI.Xaml.*.nupkg
+      $nupkgFile = $candidateNupkgs[0].FullName;
+      Copy-Item $nupkgFile $env:localPackagesPath
 
-        $newVersion = $candidateNupkgs[0].Name.Replace("Microsoft.UI.Xaml.", "").Replace(".nupkg", "")
+      $newVersion = $candidateNupkgs[0].Name.Replace("Microsoft.UI.Xaml.", "").Replace(".nupkg", "")
 
-        Write-Host "New version: $newVersion"
-        .\test\MUXControlsReleaseTest\updateUsedNugetPackageVersion.ps1 $newVersion
-      displayName: Rewrite project files to use new version
+      Write-Host "New version: $newVersion"
+      .\test\MUXControlsReleaseTest\updateUsedNugetPackageVersion.ps1 $newVersion
+    displayName: Rewrite project files to use new version
 
   - template: MUX-BuildProject-Steps.yml
     parameters:
