@@ -81,7 +81,7 @@ jobs:
       $pathToNupkg = "$($env:artifactDownloadPath)\drop"
       if($env:useFrameworkPkg -eq "true")
       {
-        $pathToNupkg = "($env:artifactDownloadPath)\drop\FrameworkPackage"
+        $pathToNupkg = "$($env:artifactDownloadPath)\drop\FrameworkPackage"
       }
       Write-Host "pathToNupkg: $pathToNupkg"
 
