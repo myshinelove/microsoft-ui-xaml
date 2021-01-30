@@ -30,9 +30,16 @@ steps:
     displayName: 'Retrieve VC tools directory'
 
   # Setting the UseInsiderSDK environment variable when running an internal pipeline
-  - script: set UseInsiderSDK=true
+   - task: CmdLine@1
     condition: ne(variables['System.CollectionUri'],'https://dev.azure.com/ms/')
     displayName: 'Conditionally set UseInsiderSDK environment variable'
+    inputs:
+      filename: 'set'
+      arguments: 'UseInsiderSDK=true'
+
+#  - script: set UseInsiderSDK=true
+#    condition: ne(variables['System.CollectionUri'],'https://dev.azure.com/ms/')
+#    displayName: 'Conditionally set UseInsiderSDK environment variable'
 
   - task: CmdLine@1
     displayName: 'Display build machine environment variables'
@@ -55,6 +62,7 @@ steps:
       nugetConfigPath: ${{ parameters.nugetConfigPath }}
 
   - task: VSBuild@1
+    condition: eq(variables['System.CollectionUri'],'https://dev.azure.com/ms/')
     displayName: 'Build solution ${{ parameters.solutionPath }}'
     inputs:
       solution: ${{ parameters.solutionPath }}
@@ -62,6 +70,16 @@ steps:
       platform: '$(buildPlatform)'
       configuration: '$(buildConfiguration)'
       msbuildArgs: '/p:AppxPackageDir="${{ parameters.appxPackageDir }}" /p:AppxBundle=Never /p:AppxSymbolPackageEnabled=false /binaryLogger:$(Build.SourcesDirectory)/${{ parameters.solutionPath }}.$(buildPlatform).$(buildConfiguration).binlog /p:MUXVersionBuild=$(builddate_yymm) /p:MUXVersionRevision=$(builddate_dd)$(buildrevision) /p:VCToolsInstallDir="$(VCToolsInstallDir)\" /p:PGOBuildMode=$(PGOBuildMode)'
+
+  - task: VSBuild@1
+    condition: ne(variables['System.CollectionUri'],'https://dev.azure.com/ms/')
+    displayName: 'Build solution ${{ parameters.solutionPath }}'
+    inputs:
+      solution: ${{ parameters.solutionPath }}
+      vsVersion: 16.0
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+      msbuildArgs: '/p:UseInsiderSDK=true /p:AppxPackageDir="${{ parameters.appxPackageDir }}" /p:AppxBundle=Never /p:AppxSymbolPackageEnabled=false /binaryLogger:$(Build.SourcesDirectory)/${{ parameters.solutionPath }}.$(buildPlatform).$(buildConfiguration).binlog /p:MUXVersionBuild=$(builddate_yymm) /p:MUXVersionRevision=$(builddate_dd)$(buildrevision) /p:VCToolsInstallDir="$(VCToolsInstallDir)\" /p:PGOBuildMode=$(PGOBuildMode)'
 
   - task: PublishBuildArtifacts@1
     displayName: 'Publish ${{ parameters.solutionPath }} binlog'
