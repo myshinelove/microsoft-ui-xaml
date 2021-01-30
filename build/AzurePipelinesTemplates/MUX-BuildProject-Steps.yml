@@ -30,7 +30,7 @@ steps:
     displayName: 'Retrieve VC tools directory'
 
   # Setting the UseInsiderSDK environment variable when running an internal pipeline
-   - task: CmdLine@1
+  - task: CmdLine@1
     condition: ne(variables['System.CollectionUri'],'https://dev.azure.com/ms/')
     displayName: 'Conditionally set UseInsiderSDK environment variable'
     inputs:
